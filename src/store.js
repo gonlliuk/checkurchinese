@@ -28,13 +28,13 @@ export default new Vuex.Store({
         },
         getInfo({ state }, { pageId, blockId, taskId }) {
             const page = state.pages.find(item => item.id === pageId);
-            if (!page) return null;
+            if (!page) return {};
 
             const block = page.blocks.find(item => item.id === blockId);
-            if (!block) return null;
+            if (!block) return {};
 
             const task = block.tasks.find(item => item.id === taskId);
-            if (!task) return null;
+            if (!task) return {};
 
             return {
                 page,

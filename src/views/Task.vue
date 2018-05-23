@@ -27,6 +27,7 @@ import { mapActions, mapState } from 'vuex';
 export default {
     data() {
         return {
+            loaded: false,
             task: null,
             page: null,
             block: null,
@@ -39,7 +40,7 @@ export default {
     },
     watch: {
         pages(val) {
-            if (val && val.length) this.getInfoFromStore();
+            if (!this.loaded && val && val.length) this.getInfoFromStore();
         },
     },
     methods: {
@@ -54,7 +55,18 @@ export default {
             this.page = page;
             this.block = block;
             this.task = task;
+            this.loaded = true;
         },
+    },
+    beforeRouteUpdate(to, from, next) {
+        next();
+
+        if (to.name === 'task') {
+            this.getInfoFromStore();
+        }
+    },
+    created() {
+        this.getInfoFromStore();
     },
 };
 </script>

@@ -8,7 +8,7 @@
             </el-row>
         </el-header>
         <el-container v-loading="loading">
-            <el-aside width="200px">
+            <el-aside>
                 <el-menu>
                     <el-submenu v-for="(page, pindex) in pages"
                                 :index="`${pindex}`"
