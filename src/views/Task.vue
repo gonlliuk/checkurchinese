@@ -1,7 +1,7 @@
 <template>
     <div>
         <el-row
-                v-show="!task"
+                v-show="pages.length && !task"
                 type="flex"
                 justify="center"
                 align="center">
@@ -14,8 +14,84 @@
                 v-if="task">
             <el-col>
                 <h2>{{ page.title }}</h2>
-                <h3>{{ block.title }}</h3>
-                <h4>{{ task.title }}</h4>
+                <h1>{{ block.title }}</h1>
+                <h1>{{ task.title }}</h1>
+
+                <p>{{ task.text }}</p>
+
+                <div v-if="task.questions.length"
+                     v-for="(question, index) in task.questions"
+                     :key="question.id">
+                    <h4>Вопрос {{ index + 1}}</h4>
+                    <p>{{ question.description }}</p>
+
+                    <div v-if="question.images.length"
+                         v-for="image in question.images"
+                         :key="image.uid"
+                         style="text-align: center">
+                        <img :src="image.data" style="max-width: 100%"/>
+                        <p>{{ image.name }}</p>
+                    </div>
+
+                    <div v-if="question.videos.length"
+                         v-for="(video, index) in question.videos"
+                         :key="index + video.url"
+                         style="text-align: center">
+                        <div v-player="{ url: video.url }" style="margin-bottom: 40px; margin-top: 40px"></div>
+                    </div>
+
+                    <div v-if="question.test && question.test.length">
+                        <h4>Тест</h4>
+                        <ol>
+                           <li v-for="testItem in question.test"
+                               :key="testItem.id">
+                               {{ testItem.question }}
+                               <div v-for="answer in testItem.answers"
+                                         :key="answer.id">
+                                   <el-radio v-model="testItem.checked"
+                                             :class="{
+                                                'answer-right': testItem.checked && answer.isCorrect && (!question.checkTestByBtn || isTestChecked),
+                                                'answer-wrong': testItem.checked && !answer.isCorrect && (!question.checkTestByBtn || isTestChecked),
+                                             }"
+                                             :label="answer.id">{{ answer.answer }}</el-radio>
+                               </div>
+                           </li>
+                        </ol>
+                        <el-row type="flex" justify="center">
+                            <p v-show="question.checkTestByBtn && isTestChecked">
+                                Дано {{ countRightCheckedAnswers(question.test) }} правильных ответов из {{ question.test.length }}.
+                            </p>
+                        </el-row>
+                        <el-row type="flex" justify="center">
+                            <el-button v-show="question.checkTestByBtn && !isTestChecked"
+                                       type="success"
+                                       @click="checkTest()">
+                                Проверить тест
+                            </el-button>
+                        </el-row>
+                        <el-row type="flex" justify="center">
+                            <el-button v-show="question.checkTestByBtn && isTestChecked"
+                                       type="info"
+                                       plain
+                                       @click="resetTestCheck(question)">
+                                Начать заного
+                            </el-button>
+                        </el-row>
+                    </div>
+                </div>
+
+                <el-row>
+                    <p v-show="task.additionalQuestion">
+                        <span class="text-bold">Дополнительные вопросы:</span>
+                        {{ task.additionalQuestion }}
+                    </p>
+                </el-row>
+                <el-row>
+                    <p v-show="task.comment">
+                        <span class="text-bold">Комментарии:</span>
+                        {{ task.comment }}
+                    </p>
+                </el-row>
             </el-col>
         </el-row>
     </div>
@@ -23,10 +99,15 @@
 
 <script>
 import { mapActions, mapState } from 'vuex';
+import player from '../directives/player';
 
 export default {
+    directives: {
+        player,
+    },
     data() {
         return {
+            isTestChecked: false,
             loaded: false,
             task: null,
             page: null,
@@ -55,7 +136,21 @@ export default {
             this.page = page;
             this.block = block;
             this.task = task;
-            this.loaded = true;
+        },
+        checkTest() {
+            this.isTestChecked = true;
+        },
+        resetTestCheck(question) {
+            question.test.forEach((item) => {
+                item.checked = null;
+            });
+            this.isTestChecked = false;
+        },
+        countRightCheckedAnswers(test) {
+            return test.reduce((total, question) => {
+                const answer = question.answers.find(item => item.id === question.checked);
+                return answer && answer.isCorrect ? total + 1 : total;
+            }, 0);
         },
     },
     beforeRouteUpdate(to, from, next) {
@@ -70,3 +165,20 @@ export default {
     },
 };
 </script>
+<style lang="scss">
+el-row {
+    margin: 20px 0;
+}
+.text-bold {
+    font-weight: bold;
+}
+.answer {
+    &-right .el-radio__input.is-checked+.el-radio__label{
+        color: #23cd23;
+    }
+
+    &-wrong .el-radio__input.is-checked+.el-radio__label{
+        color: red;
+    }
+}
+</style>

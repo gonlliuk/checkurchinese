@@ -1,14 +1,15 @@
 <template>
     <el-container>
-        <el-header>
-            <el-row
-                    type="flex"
-                    justify="center">
-                <h1>CheckUrChinese</h1>
+        <el-header height="120px">
+            <el-row type="flex"
+                    justify="center"
+                    align="center">
+                   <h1>Проверь свой китайский</h1>
             </el-row>
         </el-header>
-        <el-container v-loading="loading">
-            <el-aside>
+        <el-container v-loading="loading"
+                      style="max-width: 1024px; min-width: 640px; margin: auto">
+            <el-aside >
                 <el-menu>
                     <el-submenu v-for="(page, pindex) in pages"
                                 :index="`${pindex}`"
@@ -32,7 +33,7 @@
                     </el-submenu>
                 </el-menu>
             </el-aside>
-            <el-main style="max-width: 960px; min-width: 640px; padding: 20px 40px">
+            <el-main>
                 <router-view></router-view>
             </el-main>
         </el-container>
@@ -80,3 +81,27 @@ export default {
     },
 };
 </script>
+<style>
+body {
+    padding: 0;
+    margin: 0;
+    font-family: "Helvetica Neue",Helvetica,"PingFang SC","Hiragino Sans GB","Microsoft YaHei","微软雅黑",Arial,sans-serif;
+    font-size: 16px;
+}
+.el-container {
+    height: 100vh;
+}
+.el-aside {
+    height: 100%;
+}
+.el-menu {
+    height: 100%;
+}
+.el-header {
+    background-color: #545c64;
+    color: #ffd04b;
+}
+.el-main {
+    padding-left: 60px;
+}
+</style>
