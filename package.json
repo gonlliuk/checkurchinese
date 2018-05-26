@@ -14,20 +14,20 @@
   "devDependencies": {
     "async-validator": "https://github.com/yiminghe/async-validator/archive/1.8.1.tar.gz",
     "axios": "0.18.0",
-    "element-ui": "2.3.7",
+    "element-ui": "^2.3.7",
     "normalize.css": "8.0.0",
-    "vue": "2.5.16",
-    "vue-router": "3.0.1",
-    "vuex": "3.0.1",
+    "vue": "^2.5.16",
+    "vue-router": "^3.0.1",
+    "vuex": "^3.0.1",
     "yt-player": "3.0.0",
     "@vue/cli-plugin-babel": "^3.0.0-beta.10",
     "@vue/cli-plugin-eslint": "^3.0.0-beta.10",
     "@vue/cli-service": "^3.0.0-beta.10",
     "@vue/eslint-config-airbnb": "^3.0.0-beta.10",
-    "lint-staged": "^6.0.0",
-    "node-sass": "^4.7.2",
-    "sass-loader": "^6.0.6",
-    "vue-template-compiler": "^2.5.13"
+    "lint-staged": "6.0.0",
+    "node-sass": "4.7.2",
+    "sass-loader": "6.0.6",
+    "vue-template-compiler": "^2.5.16"
   },
   "engines": {
     "node": "8.11.2",
