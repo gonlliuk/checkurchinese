@@ -1,16 +1,18 @@
 <template>
     <el-container>
         <el-header height="120px">
-            <el-row type="flex"
-                    justify="center"
-                    align="center">
-                   <h1>Проверь свой китайский</h1>
-            </el-row>
+            <div style="text-align: center">
+                <h1 class="header">
+                    {{ home ? home.title : 'Welcome'}}
+                </h1>
+            </div>
         </el-header>
-        <el-container v-loading="loading"
-                      style="max-width: 1024px; min-width: 640px; margin: auto">
+        <el-container v-loading="loading">
             <el-aside >
                 <el-menu :default-active="active">
+                    <el-menu-item :index="`/`">
+                        <router-link to="/" tag="div">Главная страница</router-link>
+                    </el-menu-item>
                     <el-submenu v-for="page in pages"
                                 :index="`/page/${page.id}`"
                                 :key="page.id">
@@ -33,7 +35,7 @@
                     </el-submenu>
                 </el-menu>
             </el-aside>
-            <el-main ref="main">
+            <el-main>
                 <router-view></router-view>
             </el-main>
         </el-container>
@@ -53,11 +55,13 @@ export default {
     computed: {
         ...mapState([
             'pages',
+            'home',
         ]),
     },
     methods: {
         ...mapActions([
             'getPages',
+            'getHome',
         ]),
         navigateTo(pageId, blockId, taskId) {
             this.$router.push({
@@ -67,45 +71,53 @@ export default {
     },
     created() {
         this.active = this.$route.path;
-        this.getPages()
+        Promise.all([this.getHome(), this.getPages()])
             .then(() => {
                 this.loading = false;
             })
             .catch((e) => {
                 this.loading = false;
-                this.$notify({
-                    title: 'Error',
-                    type: 'error',
-                    message: `${e.message}: ${e.response.data}. Please reload page for retry.`,
-                    duration: 0,
-                });
+                if (e && e.message && e.response) {
+                    this.$notify({
+                        title: 'Error',
+                        type: 'error',
+                        message: `${e.message}: ${e.response.data}. Please reload page for retry.`,
+                        duration: 0,
+                    });
+                } else {
+                    console.error(e);
+                }
             });
     },
 };
 </script>
 <style>
-@import "~normalize.css/normalize.css";
+    @import "~normalize.css/normalize.css";
 
-body {
-    padding: 0;
-    margin: 0;
-    font-family: "Helvetica Neue",Helvetica,"PingFang SC","Hiragino Sans GB","Microsoft YaHei","微软雅黑",Arial,sans-serif;
-    font-size: 16px;
-}
-.el-container {
-    height: 100vh;
-}
-.el-aside {
-    height: 100%;
-}
-.el-menu {
-    height: 100%;
-}
-.el-header {
-    background-color: #545c64;
-    color: #ffd04b;
-}
-.el-main {
-    padding-left: 60px;
-}
+    body {
+        padding: 0;
+        margin: 0;
+        font-family: "Helvetica Neue",Helvetica,"PingFang SC","Hiragino Sans GB","Microsoft YaHei","微软雅黑",Arial,sans-serif;
+        font-size: 16px;
+    }
+    .el-container {
+        height: 100vh;
+    }
+    .el-aside {
+        height: 100%;
+    }
+    .el-menu {
+        height: 100%;
+    }
+    .el-header {
+        background-color: #2196f394;
+        color: #3f51b5;
+    }
+    .el-main {
+        padding-left: 60px;
+    }
+    .header {
+        vertical-align: center;
+        font-size: 2.8em;
+    }
 </style>

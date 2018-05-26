@@ -10,90 +10,92 @@
                 <p>Для выбора задания воспользуйтесь боковым навигационым меню</p>
             </el-col>
         </el-row>
-        <el-row
-                v-if="task">
-            <el-col>
-                <h1>{{ page.title }}</h1>
-                <h2>{{ block.title }}</h2>
-                <h3>{{ task.title }}</h3>
+        <div v-if="task">
+            <h1>{{ page.title }}</h1>
+            <h2>{{ block.title }}</h2>
+            <h3>{{ task.title }}</h3>
 
-                <p>{{ task.text }}</p>
+            <pre>{{ task.text }}</pre>
 
-                <div v-if="task.questions.length"
-                     v-for="(question, index) in task.questions"
-                     :key="question.id">
-                    <h4>Вопрос {{ index + 1}}</h4>
-                    <p>{{ question.description }}</p>
+            <div v-if="task.questions.length"
+                 v-for="(question, index) in task.questions"
+                 :key="question.id">
+                <h4>Вопрос {{ index + 1}}</h4>
+                <pre>{{ question.description }}</pre>
 
+                <div style="margin-bottom: 20px">
                     <div v-if="question.images.length"
                          v-for="image in question.images"
-                         :key="image.uid"
-                         style="text-align: center">
-                        <img :src="image.data" style="max-width: 100%"/>
-                        <p>{{ image.name }}</p>
-                    </div>
-
-                    <div v-if="question.videos.length"
-                         v-for="(video, index) in question.videos"
-                         :key="index + video.url"
-                         style="text-align: center">
-                        <div v-player="{ url: video.url }" style="margin-bottom: 40px; margin-top: 40px"></div>
-                    </div>
-
-                    <div v-if="question.test && question.test.length">
-                        <h4>Тест</h4>
-                        <ol>
-                           <li v-for="testItem in question.test"
-                               :key="testItem.id">
-                               {{ testItem.question }}
-                               <div v-for="answer in testItem.answers"
-                                         :key="answer.id">
-                                   <el-radio v-model="testItem.checked"
-                                             :class="{
-                                                'answer-right': testItem.checked && answer.isCorrect && (!question.checkTestByBtn || isTestChecked),
-                                                'answer-wrong': testItem.checked && !answer.isCorrect && (!question.checkTestByBtn || isTestChecked),
-                                             }"
-                                             :label="answer.id">{{ answer.answer }}</el-radio>
-                               </div>
-                           </li>
-                        </ol>
-                        <el-row type="flex" justify="center">
-                            <p v-show="question.checkTestByBtn && isTestChecked">
-                                Дано {{ countRightCheckedAnswers(question.test) }} правильных ответов из {{ question.test.length }}.
-                            </p>
-                        </el-row>
-                        <el-row type="flex" justify="center">
-                            <el-button v-show="question.checkTestByBtn && !isTestChecked"
-                                       type="success"
-                                       @click="checkTest()">
-                                Проверить тест
-                            </el-button>
-                        </el-row>
-                        <el-row type="flex" justify="center">
-                            <el-button v-show="question.checkTestByBtn && isTestChecked"
-                                       type="info"
-                                       plain
-                                       @click="resetTestCheck(question)">
-                                Начать заного
-                            </el-button>
+                         :key="image.uid">
+                        <el-row type="flex">
+                            <img :src="image.data" style="max-width: 100%; max-height: 300px"/>
                         </el-row>
                     </div>
                 </div>
 
-                <el-row>
-                    <p v-show="task.additionalQuestion">
-                        <span class="text-bold">Дополнительные вопросы:</span>
-                        {{ task.additionalQuestion }}
-                    </p>
-                </el-row>
-                <el-row>
-                    <p v-show="task.comment">
-                        <span class="text-bold">Комментарии:</span>
-                        {{ task.comment }}
-                    </p>
-                </el-row>
-            </el-col>
-        </el-row>
+                <div style="margin-bottom: 20px">
+                    <div v-if="question.videos.length"
+                         v-for="(video, index) in question.videos"
+                         :key="index + video.url">
+                        <div v-player="{ url: video.url }" style="margin-bottom: 40px; margin-top: 40px"></div>
+                    </div>
+                </div>
+
+                <div v-if="question.test && question.test.length">
+                    <h4 v-show="question.test.length > 1">Тест</h4>
+                    <ol>
+                       <li v-for="testItem in question.test"
+                           :key="testItem.id">
+                           <div style="margin-bottom: 10px">{{ testItem.question }}</div>
+                           <div v-for="answer in testItem.answers"
+                                     :key="answer.id">
+                               <el-radio v-model="testItem.checked"
+                                         :class="{
+                                            'answer-right': testItem.checked && answer.isCorrect && (!question.checkTestByBtn || isTestChecked),
+                                            'answer-wrong': testItem.checked && !answer.isCorrect && (!question.checkTestByBtn || isTestChecked),
+                                         }"
+                                         :label="answer.id">
+                                   {{ answer.answer }}
+                               </el-radio>
+                           </div>
+                       </li>
+                    </ol>
+                    <el-row type="flex" justify="center">
+                        <p v-show="question.checkTestByBtn && isTestChecked">
+                            Дано {{ countRightCheckedAnswers(question.test) }} правильных ответов из {{ question.test.length }}.
+                        </p>
+                    </el-row>
+                    <el-row type="flex" justify="center">
+                        <el-button v-show="question.checkTestByBtn && !isTestChecked"
+                                   type="success"
+                                   @click="checkTest()">
+                            Проверить тест
+                        </el-button>
+                    </el-row>
+                    <el-row type="flex" justify="center">
+                        <el-button v-show="question.checkTestByBtn && isTestChecked"
+                                   type="info"
+                                   plain
+                                   @click="resetTestCheck(question)">
+                            Начать заного
+                        </el-button>
+                    </el-row>
+                </div>
+            </div>
+
+            <el-row>
+                <pre v-show="task.additionalQuestion">
+                    <span class="text-bold">Дополнительные вопросы:</span>
+                    {{ task.additionalQuestion }}
+                </pre>
+            </el-row>
+            <el-row>
+                <pre v-show="task.comment">
+                    <span class="text-bold">Комментарии:</span>
+                    {{ task.comment }}
+                </pre>
+            </el-row>
+        </div>
     </div>
 </template>
 
@@ -171,8 +173,8 @@ export default {
 };
 </script>
 <style lang="scss">
-el-row {
-    margin: 20px 0;
+.el-row {
+    margin: 25px 0;
 }
 .text-bold {
     font-weight: bold;
@@ -185,5 +187,8 @@ el-row {
     &-wrong .el-radio__input.is-checked+.el-radio__label{
         color: red;
     }
+}
+pre {
+    white-space: pre-line;
 }
 </style>

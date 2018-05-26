@@ -6,7 +6,6 @@ export default {
         el.appendChild(playerDOM);
 
         const player = new YTPlayer(playerDOM, {
-            width: '100%',
             autoplay: false,
         });
 

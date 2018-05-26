@@ -10,20 +10,33 @@ Vue.use(Vuex);
 export default new Vuex.Store({
     state: {
         pages: [],
+        home: null,
     },
     mutations: {
         setPages(state, pages) {
             state.pages = pages;
+        },
+        setHome(state, home) {
+            state.home = home;
         },
     },
     actions: {
         setPages({ commit }, pages) {
             commit('setPages', pages);
         },
+        setHome({ commit }, home) {
+            commit('setHome', home);
+        },
         getPages({ dispatch }) {
             return http.get('/page')
                 .then((pages) => {
                     dispatch('setPages', pages);
+                });
+        },
+        getHome({ dispatch }) {
+            return http.get('/home')
+                .then((home) => {
+                    dispatch('setHome', home);
                 });
         },
         getInfo({ state }, { pageId, blockId, taskId }) {
