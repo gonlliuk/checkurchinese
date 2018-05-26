@@ -18,9 +18,8 @@
             <pre>{{ task.text }}</pre>
 
             <div v-if="task.questions.length"
-                 v-for="(question, index) in task.questions"
+                 v-for="question in task.questions"
                  :key="question.id">
-                <h4>Вопрос {{ index + 1}}</h4>
                 <pre>{{ question.description }}</pre>
 
                 <div style="margin-bottom: 20px">
