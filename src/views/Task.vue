@@ -13,9 +13,9 @@
         <el-row
                 v-if="task">
             <el-col>
-                <h2>{{ page.title }}</h2>
-                <h1>{{ block.title }}</h1>
-                <h1>{{ task.title }}</h1>
+                <h1>{{ page.title }}</h1>
+                <h2>{{ block.title }}</h2>
+                <h3>{{ task.title }}</h3>
 
                 <p>{{ task.text }}</p>
 
@@ -107,6 +107,7 @@ export default {
     },
     data() {
         return {
+            main: null,
             isTestChecked: false,
             loaded: false,
             task: null,
@@ -156,9 +157,13 @@ export default {
     beforeRouteUpdate(to, from, next) {
         next();
 
+        this.main.scrollTo(0, 0);
         if (to.name === 'task') {
             this.getInfoFromStore();
         }
+    },
+    mounted() {
+        this.main = document.querySelector('.el-main');
     },
     created() {
         this.getInfoFromStore();

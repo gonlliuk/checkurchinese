@@ -10,21 +10,21 @@
         <el-container v-loading="loading"
                       style="max-width: 1024px; min-width: 640px; margin: auto">
             <el-aside >
-                <el-menu>
-                    <el-submenu v-for="(page, pindex) in pages"
-                                :index="`${pindex}`"
+                <el-menu :default-active="active">
+                    <el-submenu v-for="page in pages"
+                                :index="`/page/${page.id}`"
                                 :key="page.id">
                         <template slot="title">
                             <span>{{ page.title }}</span>
                         </template>
-                        <el-submenu v-for="(block, bindex) in page.blocks"
-                                    :index="`${pindex}-${bindex}`"
+                        <el-submenu v-for="block in page.blocks"
+                                    :index="`/page/${page.id}/block/${block.id}`"
                                     :key="block.id">
                             <template slot="title">
                                 <span>{{ block.title }}</span>
                             </template>
-                            <el-menu-item v-for="(task, tindex) in block.tasks"
-                                          :index="`${pindex}-${bindex}-${tindex}`"
+                            <el-menu-item v-for="task in block.tasks"
+                                          :index="`/page/${page.id}/block/${block.id}/task/${task.id}`"
                                           @click="navigateTo(page.id, block.id, task.id)"
                                           :key="task.id">
                                 {{ task.title }}
@@ -33,7 +33,7 @@
                     </el-submenu>
                 </el-menu>
             </el-aside>
-            <el-main>
+            <el-main ref="main">
                 <router-view></router-view>
             </el-main>
         </el-container>
@@ -46,6 +46,7 @@ import { mapState, mapActions } from 'vuex';
 export default {
     data() {
         return {
+            active: '',
             loading: true,
         };
     },
@@ -65,6 +66,7 @@ export default {
         },
     },
     created() {
+        this.active = this.$route.path;
         this.getPages()
             .then(() => {
                 this.loading = false;
@@ -82,6 +84,8 @@ export default {
 };
 </script>
 <style>
+@import "~normalize.css/normalize.css";
+
 body {
     padding: 0;
     margin: 0;
