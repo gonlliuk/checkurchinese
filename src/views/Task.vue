@@ -42,43 +42,43 @@
 
                 <div v-if="question.test && question.test.length">
                     <h4 v-show="question.test.length > 1">Тест</h4>
-                    <ol>
-                       <li v-for="testItem in question.test"
-                           :key="testItem.id">
-                           <div style="margin-bottom: 10px">{{ testItem.question }}</div>
-                           <div v-for="answer in testItem.answers"
-                                     :key="answer.id">
-                               <el-radio v-model="testItem.checked"
-                                         :class="{
-                                            'answer-right': testItem.checked && answer.isCorrect && (!question.checkTestByBtn || isTestChecked),
-                                            'answer-wrong': testItem.checked && !answer.isCorrect && (!question.checkTestByBtn || isTestChecked),
-                                         }"
-                                         :label="answer.id">
+                        <div v-for="(testItem, index) in question.test"
+                             :key="testItem.id" style="margin-bottom: 10px">
+                            <div style="margin-bottom: 10px" v-show="testItem.question">
+                                <span v-show="question.test.length > 1">{{index + 1}}. </span>{{ testItem.question }}
+                            </div>
+                            <div v-for="answer in testItem.answers"
+                                     :key="answer.id" style="margin-left: 18px">
+                                <el-radio v-model="testItem.checked"
+                                            :class="{
+                                                'answer-right': testItem.checked && answer.isCorrect && (!question.checkTestByBtn || isTestChecked),
+                                                'answer-wrong': testItem.checked && !answer.isCorrect && (!question.checkTestByBtn || isTestChecked),
+                                            }"
+                                            :label="answer.id">
                                    {{ answer.answer }}
-                               </el-radio>
-                           </div>
-                       </li>
-                    </ol>
-                    <el-row type="flex" justify="center">
-                        <p v-show="question.checkTestByBtn && isTestChecked">
-                            Дано {{ countRightCheckedAnswers(question.test) }} правильных ответов из {{ question.test.length }}.
-                        </p>
-                    </el-row>
-                    <el-row type="flex" justify="center">
-                        <el-button v-show="question.checkTestByBtn && !isTestChecked"
-                                   type="success"
-                                   @click="checkTest()">
-                            Проверить тест
-                        </el-button>
-                    </el-row>
-                    <el-row type="flex" justify="center">
-                        <el-button v-show="question.checkTestByBtn && isTestChecked"
-                                   type="info"
-                                   plain
-                                   @click="resetTestCheck(question)">
-                            Начать заного
-                        </el-button>
-                    </el-row>
+                                </el-radio>
+                            </div>
+                        </div>
+                    <div style="margin-left: 22px">
+                        <el-row v-show="question.checkTestByBtn && isTestChecked">
+                            <span>
+                                Дано {{ countRightCheckedAnswers(question.test) }} правильных ответов из {{ question.test.length }}.
+                            </span>
+                        </el-row>
+                        <el-row v-show="question.checkTestByBtn && !isTestChecked">
+                            <el-button type="success"
+                                       @click="checkTest()">
+                                Проверить тест
+                            </el-button>
+                        </el-row>
+                        <el-row v-show="question.checkTestByBtn && isTestChecked">
+                            <el-button type="info"
+                                       plain
+                                       @click="resetTestCheck(question)">
+                                Начать заново
+                            </el-button>
+                        </el-row>
+                    </div>
                 </div>
             </div>
 
