@@ -7,7 +7,7 @@
                 </h1>
             </div>
         </el-header>
-        <el-container v-loading="loading">
+        <el-container v-loading="loading" style="height: calc(100vh - 120px);">
             <el-aside width="350px">
                 <el-menu :default-active="active">
                     <el-menu-item :index="`/`">
