@@ -8,7 +8,7 @@
             </div>
         </el-header>
         <el-container v-loading="loading">
-            <el-aside >
+            <el-aside width="350px">
                 <el-menu :default-active="active">
                     <el-menu-item :index="`/`">
                         <router-link to="/" tag="div">Главная страница</router-link>
@@ -112,7 +112,7 @@ export default {
         font-size: 16px;
     }
     .el-container {
-        height: 100vh;
+        height: calc(100vh - 120px);
     }
     .el-aside {
         height: 100%;
